@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Weather Dashboard</title>
+    <link rel="stylesheet" href="./Assets/css/style.css">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
         integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css"
@@ -27,18 +28,22 @@
                 <div class="input-group mb-5" style="width: 90%">
                     <input type="text" class="form-control" id="search-city">
                     <div class="input-group-append">
-                        <button class="btn btn-primary" type="button" id="search-btn"><i class="fas fa-search"></i></button>
+                        <button class="btn btn-primary" type="button" id="search-btn"><i
+                                class="fas fa-search"></i></button>
                     </div>
                 </div>
                 <div id="search-history">
                     <!-- Search history-->
-                    <div class="card px-2 py-3 history-js"> <!-- the class "history-js is for onClick event-->
+                    <div class="card px-2 py-3 history-js">
+                        <!-- the class "history-js is for onClick event-->
                         <p class="card-text">City name</p>
                     </div>
-                    <div class="card px-2 py-3 history-js"> <!-- the class "history-js is for onClick event-->
+                    <div class="card px-2 py-3 history-js">
+                        <!-- the class "history-js is for onClick event-->
                         <p class="card-text">City name</p>
                     </div>
-                    <div class="card px-2 py-3 history-js"> <!-- the class "history-js is for onClick event-->
+                    <div class="card px-2 py-3 history-js">
+                        <!-- the class "history-js is for onClick event-->
                         <p class="card-text">City name</p>
                     </div>
                 </div>
@@ -49,52 +54,67 @@
                 <div class="row">
                     <!--  Current Weather info-->
                     <div class="col">
-                        <div class="card py-4 px-3">
-                            <p class="card-text">Current Weather Information</p>
-                            <p class="card-text">Current Weather Information</p>
-                            <p class="card-text">Current Weather Information</p>
+                        <div class="card pb-5 px-3">
+                            <div class="current-card-title">
+                                <h5 id="city-name" class="card-title" style="display:inline"></h5>
+                                <img id="icon-current-weather"></img>
+                            </div>
+                            <p id="temp" class="card-text"></p>
+                            <p id="humidity" class="card-text"></p>
+                            <p id="wind-speed" class="card-text"></p>
+                            <p id="uv-index" class="card-text"></p>
                         </div>
                     </div>
-
                 </div>
                 <div class="row mt-5">
                     <!-- Weather forcast for 5 days-->
                     <div class="col-sm">
-                        <div class="card p-2 bg-primary" style="height: 150px; color: white; font-weight: bold;">
-                            <p class="card-text"> Daily Foracast</p>
+                        <div class="card p-2 mb-2 mr-1 bg-primary five-card">
+                            <h5 id="day-1" class="card-title five-day-js"></h5>
+                            <img id="icon-day-1" class="icon-img five-icon-js"></img>
+                            <p id="temp-day-1" class="card-text five-temp-js"></p>
+                            <p id="humidity-day-1" class="card-text five-humidity-js"></p>
                         </div>
                     </div>
                     <div class="col-sm">
-                        <div class="card p-2 bg-primary" style="height: 150px; color: white; font-weight: bold;">
-                            <p class="card-text"> Daily Foracast</p>
+                        <div class="card p-2 mb-2 mr-1 bg-primary five-card">
+                            <h5 id="day-2" class="card-title five-day-js"></h5>
+                            <img id="icon-day-1" class="icon-img five-icon-js"></img>
+                            <p id="temp-day-2" class="card-text five-temp-js"></p>
+                            <p id="humidity-day-2" class="card-text five-humidity-js"></p>
                         </div>
                     </div>
                     <div class="col-sm">
-                        <div class="card p-2 bg-primary" style="height: 150px; color: white; font-weight: bold;">
-                            <p class="card-text"> Daily Foracast</p>
+                        <div class="card p-2 mb-2 mr-1 bg-primary five-card">
+                            <h5 id="day-3" class="card-title five-day-js"></h5>
+                            <img id="icon-day-3" class="icon-img five-icon-js"></img>
+                            <p id="temp-day-3" class="card-text five-temp-js"></p>
+                            <p id="humidity-day-3" class="card-text five-humidity-js"></p>
                         </div>
                     </div>
                     <div class="col-sm">
-                        <div class="card p-2 bg-primary" style="height: 150px; color: white; font-weight: bold;">
-                            <p class="card-text"> Daily Foracast</p>
+                        <div class="card p-2 mb-2 mr-1 bg-primary five-card">
+                            <h5 id="day-4" class="card-title five-day-js"></h5>
+                            <img id="icon-day-4" class="icon-img five-icon-js"></img>
+                            <p id="temp-day-4" class="card-text five-temp-js"></p>
+                            <p id="humidity-day-4" class="card-text five-humidity-js"></p>
                         </div>
                     </div>
                     <div class="col-sm">
-                        <div class="card p-2 bg-primary" style="height: 150px; color: white; font-weight: bold;">
-                            <p class="card-text"> Daily Foracast</p>
+                        <div class="card p-2 mb-2 mr-1 bg-primary five-card">
+                            <h5 id="day-5" class="card-title five-day-js"></h5>
+                            <img id="icon-day-5" class="icon-img five-icon-js"></img>
+                            <p id="temp-day-5" class="card-text five-temp-js"></p>
+                            <p id="humidity-day-5" class="card-text five-humidity-js"></p>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-
-
     </div>
 
-
-
-    <script src="./Assets/script/script.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.0/axios.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
+    <script src="./Assets/script/script.js"></script>   
 </body>
-
 </html>
-
