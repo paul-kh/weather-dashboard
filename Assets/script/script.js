@@ -37,7 +37,7 @@ searchBtnEl.addEventListener("click", function (event) {
             function displayCurrentWeather() {
                 // Get icon pictures from OpenWeather.org
                 const iconName = data.data.weather[0].icon;
-                const iconSRC = "http://openweathermap.org/img/wn/" + iconName + "@2x.png";
+                const iconSRC = "https://openweathermap.org/img/wn/" + iconName + "@2x.png";
                 cityNameEl.innerHTML = data.data.name + "&nbsp" + "(" + currentDay + ")";
                 iconCurrentWeatherEl.setAttribute("src", iconSRC);
                 tempCurrentWeatherEl.innerHTML = "Temperatur: " + data.data.main.temp + " &#8457;";
@@ -50,7 +50,7 @@ searchBtnEl.addEventListener("click", function (event) {
                 console.log("Lat: ", cityLat, " Lon: ", cityLon);
 
                 function getCurrentUVIndex() {
-                    const uvIndexQuery = "http://api.openweathermap.org/data/2.5/uvi?lat=" + cityLat + "&lon=" + cityLon + "&appid=" + apiKey;
+                    const uvIndexQuery = "https://api.openweathermap.org/data/2.5/uvi?lat=" + cityLat + "&lon=" + cityLon + "&appid=" + apiKey;
                     console.log("uvIndex Qery: ", uvIndexQuery);
                     axios.get(uvIndexQuery).then(function (UVdata) {
                         console.log("UV Index Data: ", UVdata);
@@ -67,7 +67,7 @@ searchBtnEl.addEventListener("click", function (event) {
     // ---------------------------------------- END OF CURRENT WEATHER-----------------------------------------------------------------------------
 
     // Get 5-day forcast 
-    const queryUrlForcast = "http://api.openweathermap.org/data/2.5/forecast?q=" +
+    const queryUrlForcast = "https://api.openweathermap.org/data/2.5/forecast?q=" +
         searchCityStr + "&units=imperial&appid=" +
         apiKey;
     console.log("Forcast Weather URL: ", queryUrlForcast);
@@ -96,7 +96,7 @@ searchBtnEl.addEventListener("click", function (event) {
                 for (let i = 0; i < 5; i++){
                     fiveCardTitleEls[i].innerHTML = weathers[i].day; // Show date as card title for the five weather cards
                     // Get icon SRC of each icon
-                    iconSRCs[i] = "http://openweathermap.org/img/wn/" + weathers[i].icon + "@2x.png";
+                    iconSRCs[i] = "https://openweathermap.org/img/wn/" + weathers[i].icon + "@2x.png";
                     fiveIconEls[i].src = iconSRCs[i]; // Set SRC of each weather icon
                     fiveTempEls[i].innerHTML = "Temp: " + weathers[i].temp + "&#8457;"; // Show temperature
                     fiveHumidityEls[i].innerHTML = "Humidity: " + weathers[i].humidity + "&#37;"; // Show humidity         
