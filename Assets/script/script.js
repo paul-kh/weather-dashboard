@@ -154,10 +154,9 @@ searchBtnEl.addEventListener("click", function (event) {
     }, 500);
     getCurrentWeather(searchCityStr);
     get5DayWeatherForcast(searchCityStr);
-    
+
 
 }); // end of onClick event
-showHistory();
 
 function clickHistory() {
     const historyBtnEls = document.querySelectorAll(".history-btn-js");
@@ -172,7 +171,20 @@ function clickHistory() {
         });
     });
 }
+
+function showLastSearchResult() {
+    const dataStr = localStorage.getItem("history") || "[]"; // if localstorage don't exist, create and empty array
+    const data = JSON.parse(dataStr);
+    if (data.length > 0) {
+        getCurrentWeather(data[data.length - 1]);
+        get5DayWeatherForcast(data[data.length - 1]);
+        console.log(data[data.length - 1]);
+    }
+}
+showLastSearchResult();
+showHistory();
 clickHistory();
+
 
 
 
