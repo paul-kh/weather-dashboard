@@ -179,6 +179,7 @@ function showLastSearchResult() {
         getCurrentWeather(data[data.length - 1]);
         get5DayWeatherForcast(data[data.length - 1]);
         console.log(data[data.length - 1]);
+        clickHistory();
     }
 }
 showLastSearchResult();
