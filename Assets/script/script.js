@@ -17,6 +17,7 @@ const uvIndexCurrentWeatherEl = document.getElementById("uv-index");
 
 
 function getCurrentWeather(city) {
+    cityIsFound = false;
     // Define variables for lat and lon for getting UV Index
     let cityLat = "";
     let cityLon = "";
