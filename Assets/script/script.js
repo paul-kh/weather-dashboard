@@ -3,6 +3,7 @@ const searchBtnEl = document.getElementById("search-btn");
 let searchCityStr = "";
 const apiKey = "6f7d6642b79b540bd7c50a703fc51a88";
 let cityIsFound = false; // set flag when city is found in the API server
+let searchMethod;
 
 // Get current time
 const day = new Date();
@@ -15,14 +16,22 @@ const humidityCurrentWeatherEl = document.getElementById("humidity");
 const windSpeedCurrentWeatherEl = document.getElementById("wind-speed");
 const uvIndexCurrentWeatherEl = document.getElementById("uv-index");
 
+function getSearchMethod(searchStr) {
+    if (searchStr.length === 5 && parseInt(searchStr) + '' === searchStr) {
+        searchMethod = 'zip';
+    } else {
+        searchMethod = 'q';
+    }
+}
 
-function getCurrentWeather(city) {
+function getCurrentWeather(searchStr) {
     cityIsFound = false;
     // Define variables for lat and lon for getting UV Index
     let cityLat = "";
     let cityLon = "";
-    const queryUrlCurrent = "https://api.openweathermap.org/data/2.5/weather?q=" +
-        city + "&units=imperial&appid=" +
+    getSearchMethod(searchStr);
+    const queryUrlCurrent = "https://api.openweathermap.org/data/2.5/weather?" + searchMethod + "=" +
+        searchStr + "&units=imperial&appid=" +
         apiKey;
     // log queryURL for troubleshooting
     console.log("Current Weather URL: ", queryUrlCurrent);
