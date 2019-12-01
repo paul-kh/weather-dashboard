@@ -1,9 +1,14 @@
 const cityInputEl = document.getElementById("search-city");
 const searchBtnEl = document.getElementById("search-btn");
-let searchCityStr = "";
+let searchCityStr = ""; // city name or zip code for user's input to search
+let foundCityName; // city name found on the server for saving to search history
 const apiKey = "6f7d6642b79b540bd7c50a703fc51a88";
 let cityIsFound = false; // set flag when city is found in the API server
 let searchMethod;
+let userCurrentLatitude = "";
+let userCurrentLongitude = "";
+let foundLatitude;
+let foundLongitude;
 
 // Get current time
 const day = new Date();
@@ -24,48 +29,61 @@ function getSearchMethod(searchStr) {
     }
 }
 
-function getCurrentWeather(searchStr) {
+function getWeatherInfo(searchStr) {
     cityIsFound = false;
-    // Define variables for lat and lon for getting UV Index
-    let cityLat = "";
-    let cityLon = "";
-    getSearchMethod(searchStr);
-    const queryUrlCurrent = "https://api.openweathermap.org/data/2.5/weather?" + searchMethod + "=" +
-        searchStr + "&units=imperial&appid=" +
-        apiKey;
-    // log queryURL for troubleshooting
-    console.log("Current Weather URL: ", queryUrlCurrent);
+    let queryUrlCurrent;
+    // if user allows access to their location, make query based on lat and lon, else make query based on search string
+    if (userCurrentLatitude === "" && userCurrentLongitude === "") {
+        getSearchMethod(searchStr);
+        queryUrlCurrent = "https://api.openweathermap.org/data/2.5/weather?" + searchMethod + "=" +
+            searchStr + "&units=imperial&appid=" +
+            apiKey;
+        // log queryURL for troubleshooting
+        console.log("Current Weather URL: ", queryUrlCurrent);
+    } else {
+        queryUrlCurrent = "https://api.openweathermap.org/data/2.5/weather?lat=" + userCurrentLatitude + "&lon=" +
+            userCurrentLongitude + "&units=imperial&appid=" +
+            apiKey;
+        console.log("Current Weather URL: ", queryUrlCurrent);
+        // Reset user location after page already loaded so that it wont affect the search result when user input a search string
+        userCurrentLatitude = "";
+        userCurrentLongitude = "";
+    }
 
     // Use the 3r-party API axios to query current weather data from API server of Open Weather
     axios.get(queryUrlCurrent).then(function (data) {
         console.log("Current weather data: ", data);
         // Get city name and assign it to global variable for showing searched cities to user
         if (data) { cityIsFound = true };
-        searchCityStr = data.data.name; // update city with the city obtained from server
-        console.log("searchCityStr is now assigned with city obtained from server: ", searchCityStr);
+        foundCityName = data.data.name; // update city with the city obtained from server for saving to local storage as search history
+        console.log("City name obtained from server: ", foundCityName);
         currentWeatherToHTML(data);
+        get5DayWeatherForcast(foundLatitude, foundLongitude);
     }); // end of axios
+
+
 } // end of function getCurrentWeather()
 
 function currentWeatherToHTML(dataObj) {
     // Get icon pictures from OpenWeather.org
     const iconName = dataObj.data.weather[0].icon;
     const iconSRC = "https://openweathermap.org/img/wn/" + iconName + "@2x.png";
-    cityNameEl.innerHTML = dataObj.data.name + "&nbsp" + "(" + currentDay + ")";
+    cityNameEl.innerHTML = dataObj.data.name + ",&nbsp" + dataObj.data.sys.country + "&nbsp(" + currentDay + ")";
     iconCurrentWeatherEl.setAttribute("src", iconSRC);
     tempCurrentWeatherEl.innerHTML = "Temperatur: " + dataObj.data.main.temp + " &#8457;";
     humidityCurrentWeatherEl.innerHTML = "Humidity: " + dataObj.data.main.humidity + " &#37;";
     windSpeedCurrentWeatherEl.innerHTML = "Wind Speed: " + dataObj.data.wind.speed + " MPH";
+    // Get lat and lon for getting data from API server for UV index, and for five-day forcast
+    foundLatitude = dataObj.data.coord.lat; // 
+    foundLongitude = dataObj.data.coord.lon;
+    console.log("found lat & lon: ", foundLatitude + ", ", foundLongitude);
 
-    // Get lat & lon for another query to get UV Index
-    cityLat = dataObj.data.coord.lat;
-    cityLon = dataObj.data.coord.lon;
-    console.log("Lat: ", cityLat, " Lon: ", cityLon);
-    getCurrentUVIndex(cityLat, cityLon);
+    // Get UV Index based on the found lat & lon
+    getCurrentUVIndex(foundLatitude, foundLongitude);
 } // end of displayCurrentWeather()
 
-function getCurrentUVIndex(cityLat, cityLon) {
-    const uvIndexQuery = "https://api.openweathermap.org/data/2.5/uvi?lat=" + cityLat + "&lon=" + cityLon + "&appid=" + apiKey;
+function getCurrentUVIndex(lat, lon) {
+    const uvIndexQuery = "https://api.openweathermap.org/data/2.5/uvi?lat=" + lat + "&lon=" + lon + "&appid=" + apiKey;
     console.log("uvIndex Qery: ", uvIndexQuery);
     axios.get(uvIndexQuery).then(function (UVdata) {
         console.log("UV Index Data: ", UVdata);
@@ -74,7 +92,7 @@ function getCurrentUVIndex(cityLat, cityLon) {
 } // end of getCurrentUVIndex()
 
 function saveSearchHistory() {
-    const city = searchCityStr;
+    const city = foundCityName;
     const dataStr = localStorage.getItem("history") || "[]"; // if the saved data "history" not exist, create empty array
     const data = JSON.parse(dataStr);
     // if city already saved, do not save again
@@ -111,9 +129,9 @@ function showHistory() {
     }); // end of forEach loop
 }
 
-function get5DayWeatherForcast(city) {
-    const queryUrlForcast = "https://api.openweathermap.org/data/2.5/forecast?q=" +
-        city + "&units=imperial&appid=" +
+function get5DayWeatherForcast(lat, lon) {
+    const queryUrlForcast = "https://api.openweathermap.org/data/2.5/forecast?lat=" + lat + "&lon=" +
+        lon + "&units=imperial&appid=" +
         apiKey;
     console.log("Forcast Weather URL: ", queryUrlForcast);
     // pull forcast data from API server
@@ -153,6 +171,8 @@ function fiveDayForcastToHTML(weatherArray) {
 // Add OnClick() to the search button
 searchBtnEl.addEventListener("click", function (event) {
     event.preventDefault();
+    cityInputEl.focus();
+    cityInputEl.select();
     searchCityStr = cityInputEl.value.trim();
     console.log("City name: ", searchCityStr);
     // wait 500ms for global variable searchCityStr to be updated first before saving it to the local storage
@@ -162,10 +182,7 @@ searchBtnEl.addEventListener("click", function (event) {
         showHistory();
         clickHistory();
     }, 500);
-    getCurrentWeather(searchCityStr);
-    get5DayWeatherForcast(searchCityStr);
-
-
+    getWeatherInfo(searchCityStr);
 }); // end of onClick event
 
 function clickHistory() {
@@ -174,27 +191,62 @@ function clickHistory() {
     //add onClick event to each history button
     historyBtnEls.forEach(function (btn) {
         btn.addEventListener("click", function () {
+            cityInputEl.value = ""; // clear search box
             const btnText = btn.innerHTML;
             console.log("Clicked on: ", btnText);
-            getCurrentWeather(btnText);
-            get5DayWeatherForcast(btnText);
+            getWeatherInfo(btnText);
         });
     });
-}
+} // end of clickHistory()
 
 function showLastSearchResult() {
     const dataStr = localStorage.getItem("history") || "[]"; // if localstorage don't exist, create and empty array
     const data = JSON.parse(dataStr);
     if (data.length > 0) {
-        getCurrentWeather(data[data.length - 1]);
-        get5DayWeatherForcast(data[data.length - 1]);
+        getWeatherInfo(data[data.length - 1]);
         console.log(data[data.length - 1]);
         clickHistory();
     }
 }
-showLastSearchResult();
-showHistory();
-clickHistory();
+
+function getUserLocation() {
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(function (position) {
+            userCurrentLatitude = position.coords.latitude;
+            userCurrentLongitude = position.coords.longitude;
+            console.log("User's current lat & lon: ", userCurrentLatitude, ", ", userCurrentLongitude);
+            getWeatherInfo("");
+        }, function (error) {
+            switch (error.code) {
+                case error.PERMISSION_DENIED:
+                    showLastSearchResult();
+                    break;
+                case error.POSITION_UNAVAILABLE:
+                    alert("Location information is unavailable.");
+                    break;
+                case error.TIMEOUT:
+                    alert("The request to get user location timed out.");
+                    break;
+                case error.UNKNOWN_ERROR:
+                    alert("An unknown error occurred.");
+                    break;
+            }
+        });
+    } else { return; }
+}
+
+function pageLoad() {
+
+    getUserLocation();
+    cityInputEl.focus();
+    showHistory();
+    clickHistory();
+
+}
+pageLoad();
+
+// 
+
 
 
 
