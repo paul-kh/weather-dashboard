@@ -21,6 +21,17 @@ const humidityCurrentWeatherEl = document.getElementById("humidity");
 const windSpeedCurrentWeatherEl = document.getElementById("wind-speed");
 const uvIndexCurrentWeatherEl = document.getElementById("uv-index");
 
+
+function autocomplete(){
+    const autocomplete = new google.maps.places.Autocomplete(cityInputEl, {types: ['geocode']});
+    console.log("Autocomplete object: ", autocomplete);
+    google.maps.event.addListener(autocomplete, 'place_changed', function(){
+        const selectedPlace = autocomplete.getPlace();
+        userCurrentLatitude = selectedPlace.geometry.location.lat();
+        userCurrentLongitude = selectedPlace.geometry.location.lng();
+    });
+}
+
 function getSearchMethod(searchStr) {
     if (searchStr.length === 5 && parseInt(searchStr) + '' === searchStr) {
         searchMethod = 'zip';
@@ -238,6 +249,7 @@ function getUserLocation() {
 function pageLoad() {
 
     getUserLocation();
+    autocomplete();
     cityInputEl.focus();
     showHistory();
     clickHistory();
