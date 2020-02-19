@@ -22,10 +22,10 @@ const windSpeedCurrentWeatherEl = document.getElementById("wind-speed");
 const uvIndexCurrentWeatherEl = document.getElementById("uv-index");
 
 
-function autocomplete(){
-    const autocomplete = new google.maps.places.Autocomplete(cityInputEl, {types: ['geocode']});
+function autocomplete() {
+    const autocomplete = new google.maps.places.Autocomplete(cityInputEl, { types: ['geocode'] });
     console.log("Autocomplete object: ", autocomplete);
-    google.maps.event.addListener(autocomplete, 'place_changed', function(){
+    google.maps.event.addListener(autocomplete, 'place_changed', function () {
         const selectedPlace = autocomplete.getPlace();
         userCurrentLatitude = selectedPlace.geometry.location.lat();
         userCurrentLongitude = selectedPlace.geometry.location.lng();
@@ -199,19 +199,18 @@ searchBtnEl.addEventListener("click", function (event) {
 function clickHistory() {
     const historyBtnEls = document.querySelectorAll(".history-btn-js");
     console.log("history button elements: ", historyBtnEls);
-    //add onClick event to each history button
+    // add onClick event to each history button
     historyBtnEls.forEach(function (btn) {
         btn.addEventListener("click", function () {
-            cityInputEl.value = ""; // clear search box
+            cityInputEl.value = "";
             const btnText = btn.innerHTML;
-            console.log("Clicked on: ", btnText);
             getWeatherInfo(btnText);
         });
     });
-} // end of clickHistory()
+}
 
 function showLastSearchResult() {
-    const dataStr = localStorage.getItem("history") || "[]"; // if localstorage don't exist, create and empty array
+    const dataStr = localStorage.getItem("history") || "[]"; // if localstorage doesn't exist, create and empty array
     const data = JSON.parse(dataStr);
     if (data.length > 0) {
         getWeatherInfo(data[data.length - 1]);
@@ -256,8 +255,6 @@ function pageLoad() {
 
 }
 pageLoad();
-
-// 
 
 
 
