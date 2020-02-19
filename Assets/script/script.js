@@ -22,9 +22,6 @@ const windSpeedCurrentWeatherEl = document.getElementById("wind-speed");
 const uvIndexCurrentWeatherEl = document.getElementById("uv-index");
 const clearHistoryBtnEl = document.getElementById("clear-history");
 
-
-
-
 function autocomplete() {
     const autocomplete = new google.maps.places.Autocomplete(cityInputEl, { types: ['geocode'] });
     console.log("Autocomplete object: ", autocomplete);
@@ -124,6 +121,8 @@ function saveSearchHistory() {
 clearHistoryBtnEl.addEventListener("click", () => {
     localStorage.removeItem("history");
     showHistory();
+    cityInputEl.value = "";
+    cityInputEl.focus();
 })
 
 function showHistory() {
