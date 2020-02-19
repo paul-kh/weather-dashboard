@@ -144,7 +144,7 @@ function showHistory() {
         const cardEl = document.createElement("div");
         cardEl.setAttribute("class", "card px-2 py-2");
         const historyBtnEl = document.createElement("button");
-        historyBtnEl.setAttribute("class", "btn card-text text-left history-btn-js");
+        historyBtnEl.setAttribute("class", "btn card-text text-left history-btn-js text-primary");
         historyBtnEl.innerHTML = city;
         console.log("City array element: ", city);
         historyEl.prepend(cardEl);
