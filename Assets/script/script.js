@@ -45,16 +45,11 @@ function getWeatherInfo(searchStr) {
     let queryUrlCurrent;
     // if user allows access to their location, make query based on lat and lon, else make query based on search string
     if (userCurrentLatitude === "" && userCurrentLongitude === "") {
-        getSearchMethod(searchStr);
-        queryUrlCurrent = "https://api.openweathermap.org/data/2.5/weather?" + searchMethod + "=" +
-            searchStr + "&units=imperial&appid=" +
-            apiKey;
+        queryUrlCurrent = `https://api.openweathermap.org/data/2.5/weather?${searchMethod}=${searchStr}&units=imperial&appid=${apiKey}`;
         // log queryURL for troubleshooting
         console.log("Current Weather URL: ", queryUrlCurrent);
     } else {
-        queryUrlCurrent = "https://api.openweathermap.org/data/2.5/weather?lat=" + userCurrentLatitude + "&lon=" +
-            userCurrentLongitude + "&units=imperial&appid=" +
-            apiKey;
+        queryUrlCurrent = `https://api.openweathermap.org/data/2.5/weather?lat=${userCurrentLatitude}&lon=${userCurrentLongitude}&units=imperial&appid=${apiKey}`;
         console.log("Current Weather URL: ", queryUrlCurrent);
         // Reset user location after page already loaded so that it wont affect the search result when user input a search string
         userCurrentLatitude = "";
@@ -210,7 +205,7 @@ function clickHistory() {
 }
 
 function showLastSearchResult() {
-    const dataStr = localStorage.getItem("history") || "[]"; // if localstorage doesn't exist, create and empty array
+    const dataStr = localStorage.getItem("history") || "[]"; // if localstorage don't exist, create and empty array
     const data = JSON.parse(dataStr);
     if (data.length > 0) {
         getWeatherInfo(data[data.length - 1]);
