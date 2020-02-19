@@ -18,9 +18,10 @@ body {
     margin: 0 auto;
     width: 120px;
     color: white;
-    background-color: #0069D9;
+    background-color: #083C5D;
     margin-bottom: 10px;
     border: 1px rgb(70, 69, 69) solid;
     border-radius: 4px;
     text-align: center;
+    cursor: pointer;
 }

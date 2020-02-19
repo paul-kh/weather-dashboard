@@ -20,6 +20,9 @@ const tempCurrentWeatherEl = document.getElementById("temp");
 const humidityCurrentWeatherEl = document.getElementById("humidity");
 const windSpeedCurrentWeatherEl = document.getElementById("wind-speed");
 const uvIndexCurrentWeatherEl = document.getElementById("uv-index");
+const clearHistoryBtnEl = document.getElementById("clear-history");
+
+
 
 
 function autocomplete() {
@@ -38,6 +41,7 @@ function getSearchMethod(searchStr) {
     } else {
         searchMethod = 'q';
     }
+    console.log("search method: ", searchMethod);
 }
 
 function getWeatherInfo(searchStr) {
@@ -45,6 +49,7 @@ function getWeatherInfo(searchStr) {
     let queryUrlCurrent;
     // if user allows access to their location, make query based on lat and lon, else make query based on search string
     if (userCurrentLatitude === "" && userCurrentLongitude === "") {
+        getSearchMethod(searchStr);
         queryUrlCurrent = `https://api.openweathermap.org/data/2.5/weather?${searchMethod}=${searchStr}&units=imperial&appid=${apiKey}`;
         // log queryURL for troubleshooting
         console.log("Current Weather URL: ", queryUrlCurrent);
@@ -115,6 +120,11 @@ function saveSearchHistory() {
         return;
     } // end of if else 
 } // end of saveSearchHistory()
+
+clearHistoryBtnEl.addEventListener("click", () => {
+    localStorage.removeItem("history");
+    showHistory();
+})
 
 function showHistory() {
     const historyEl = document.getElementById("search-history"); // search history container
